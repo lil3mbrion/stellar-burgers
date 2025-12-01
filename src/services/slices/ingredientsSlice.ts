@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getIngredientsApi } from '../utils/burger-api';
+import { getIngredientsApi } from '../../utils/burger-api';
 import { TIngredient } from '@utils-types';
 import { createSelector } from 'reselect';
-import { RootState } from '../services/store';
+import { RootState } from '../store';
 
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchAll',

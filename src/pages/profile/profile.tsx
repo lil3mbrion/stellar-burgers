@@ -1,25 +1,36 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectUser,
+  updateUser,
+  selectAuthError,
+  selectAuthLoading,
+  checkUserAuth
+} from '../../services/slices/authSlice';
+import { AppDispatch } from '../../services/store';
+import { getCookie } from '../../utils/cookie';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const user = useSelector(selectUser);
+  const isLoading = useSelector(selectAuthLoading);
+  const updateUserError = useSelector(selectAuthError);
+  const dispatch = useDispatch<AppDispatch>();
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name || '',
+    email: user?.email || '',
     password: ''
   });
 
+  const [localError, setLocalError] = useState('');
+
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
+    setFormValue({
       name: user?.name || '',
-      email: user?.email || ''
-    }));
+      email: user?.email || '',
+      password: ''
+    });
   }, [user]);
 
   const isFormChanged =
@@ -27,17 +38,38 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    if (!isFormChanged) return;
+
+    setLocalError('');
+
+    try {
+      await dispatch(checkUserAuth()).unwrap();
+
+      await dispatch(
+        updateUser({
+          name: formValue.name,
+          email: formValue.email,
+          ...(formValue.password && { password: formValue.password })
+        })
+      ).unwrap();
+
+      setFormValue((prev) => ({ ...prev, password: '' }));
+    } catch (error: any) {
+      console.error('Ошибка обновления профиля:', error);
+      setLocalError(error.message || 'Ошибка обновления профиля');
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
+    setLocalError('');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,17 +77,17 @@ export const Profile: FC = () => {
       ...prevState,
       [e.target.name]: e.target.value
     }));
+    setLocalError('');
   };
 
   return (
     <ProfileUI
       formValue={formValue}
       isFormChanged={isFormChanged}
+      updateUserError={localError || updateUserError || ''}
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

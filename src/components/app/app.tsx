@@ -26,7 +26,7 @@ import {
   selectIngredients,
   selectIngredientsLoading,
   selectIngredientsError
-} from '../../slices/ingredientsSlice';
+} from '../../services/slices/ingredientsSlice';
 import { AppDispatch } from '../../services/store';
 
 const App = () => {
@@ -125,7 +125,10 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal onClose={handleCloseModal} title='Информация о заказе 1'>
+              <Modal
+                onClose={handleCloseModal}
+                title={`#${location.pathname.split('/').pop()}`}
+              >
                 <OrderInfo />
               </Modal>
             }
@@ -134,7 +137,10 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal onClose={handleCloseModal} title='Информация о заказе 2'>
+                <Modal
+                  onClose={handleCloseModal}
+                  title={`#${location.pathname.split('/').pop()}`}
+                >
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>

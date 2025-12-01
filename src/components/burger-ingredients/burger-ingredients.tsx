@@ -4,7 +4,7 @@ import {
   selectBuns,
   selectMains,
   selectSauces
-} from '../../slices/ingredientsSlice';
+} from '../../services/slices/ingredientsSlice';
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector } from 'react-redux';
@@ -13,7 +13,6 @@ export const BurgerIngredients: FC = () => {
   const buns = useSelector(selectBuns);
   const mains = useSelector(selectMains);
   const sauces = useSelector(selectSauces);
-
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);

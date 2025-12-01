@@ -1,26 +1,21 @@
-// slices/constructorSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
-import { RootState } from '../services/store';
+import { RootState } from '../store';
+import { selectBuns } from './ingredientsSlice';
 
 type TConstructorState = {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
-  orderRequest: boolean;
-  orderModalData: any | null;
 };
 
 const initialState: TConstructorState = {
   bun: null,
-  ingredients: [],
-  orderRequest: false,
-  orderModalData: null
+  ingredients: []
 };
 
 const constructorSlice = createSlice({
-  name: 'constructor',
+  name: 'burgerConstructor',
   initialState,
-
   reducers: {
     addBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
@@ -28,10 +23,11 @@ const constructorSlice = createSlice({
     },
 
     addIngredient: (state, action: PayloadAction<TConstructorIngredient>) => {
+      const newIngredient = { ...action.payload };
       if (!state.ingredients) {
         state.ingredients = [];
       }
-      state.ingredients.push(action.payload);
+      state.ingredients.push(newIngredient);
       return state;
     },
 
@@ -58,23 +54,11 @@ const constructorSlice = createSlice({
       state.bun = null;
       state.ingredients = [];
       return state;
-    },
-
-    setOrderRequest: (state, action: PayloadAction<boolean>) => {
-      state.orderRequest = action.payload;
-      return state;
-    },
-
-    setOrderModalData: (state, action: PayloadAction<any>) => {
-      state.orderModalData = action.payload;
-      return state;
-    },
-
-    closeOrderModal: (state) => {
-      state.orderModalData = null;
-      state.orderRequest = false;
-      return state;
     }
+  },
+  selectors: {
+    selectBun: (state: TConstructorState) => state.bun,
+    selectIngredients: (state: TConstructorState) => state.ingredients
   }
 });
 
@@ -83,18 +67,9 @@ export const {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  clearConstructor,
-  setOrderRequest,
-  setOrderModalData,
-  closeOrderModal
+  clearConstructor
 } = constructorSlice.actions;
 
-export const selectBun = (state: RootState) => state.constructor.bun;
-export const selectIngredients = (state: RootState) =>
-  state.constructor.ingredients;
-export const selectOrderModalData = (state: RootState) =>
-  state.constructor.orderModalData;
-export const selectOrderRequest = (state: RootState) =>
-  state.constructor.orderRequest;
+export const { selectBun, selectIngredients } = constructorSlice.selectors;
 
 export default constructorSlice.reducer;
