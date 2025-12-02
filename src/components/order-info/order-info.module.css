@@ -1,0 +1,16 @@
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.orderNumber {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-top: 20px;
+}
+
+.orderNumber p {
+  font-size: 28px;
+  font-weight: bold;
+  color: #f2f2f3;
+}

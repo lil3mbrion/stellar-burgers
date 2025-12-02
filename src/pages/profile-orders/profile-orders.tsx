@@ -8,6 +8,7 @@ import {
 } from '../../services/slices/orderSlice';
 import { selectUser } from '../../services/slices/authSlice';
 import { AppDispatch } from '../../services/store';
+import { Preloader } from '@ui';
 
 export const ProfileOrders: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,18 +23,7 @@ export const ProfileOrders: FC = () => {
   }, [dispatch, user]);
 
   if (isLoading && orders.length === 0) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}
-      >
-        <p className='text text_type_main-medium'>Загрузка заказов...</p>
-      </div>
-    );
+    return <Preloader />;
   }
 
   return <ProfileOrdersUI orders={orders} />;

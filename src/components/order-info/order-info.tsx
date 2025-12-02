@@ -1,5 +1,5 @@
 import { FC, useMemo, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
@@ -9,9 +9,11 @@ import { selectOrders } from '../../services/slices/orderSlice';
 import { fetchFeeds } from '../../services/slices/feedSlice';
 import { fetchUserOrders } from '../../services/slices/orderSlice';
 import { AppDispatch } from '../../services/store';
+import { getCookie } from '../../utils/cookie';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
+  const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
 
   const ingredients = useSelector(selectIngredients);
@@ -22,7 +24,9 @@ export const OrderInfo: FC = () => {
     if (!feedData) {
       dispatch(fetchFeeds());
     }
-    if (userOrders.length === 0) {
+
+    const accessToken = getCookie('accessToken');
+    if (accessToken && userOrders.length === 0) {
       dispatch(fetchUserOrders());
     }
   }, [dispatch, feedData, userOrders.length]);
@@ -90,5 +94,16 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  const isModal = location.state?.background;
+
+  return (
+    <>
+      {!isModal && (
+        <p className='text text_type_digits-default mb-6 text-center'>
+          #{number}
+        </p>
+      )}
+      <OrderInfoUI orderInfo={orderInfo} />
+    </>
+  );
 };

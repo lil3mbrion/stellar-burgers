@@ -1,0 +1,10 @@
+.pageContainer {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  color: #f2f2f3;
+}
