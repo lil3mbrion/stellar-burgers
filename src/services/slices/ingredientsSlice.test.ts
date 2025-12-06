@@ -15,25 +15,27 @@ describe('ingredientsSlice reducer', () => {
   };
 
   it('should return the initial state', () => {
-    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual(initialState);
+    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual(
+      initialState
+    );
   });
 
   describe('fetchIngredients async thunk', () => {
     it('should handle fetchIngredients.pending', () => {
       const action = { type: fetchIngredients.pending.type };
       const state = ingredientsReducer(initialState, action);
-      
+
       expect(state.loading).toBe(true);
       expect(state.error).toBe(null);
     });
 
     it('should handle fetchIngredients.fulfilled', () => {
-      const action = { 
+      const action = {
         type: fetchIngredients.fulfilled.type,
         payload: mockIngredients
       };
       const state = ingredientsReducer(initialState, action);
-      
+
       expect(state.loading).toBe(false);
       expect(state.items).toEqual(mockIngredients);
       expect(state.error).toBe(null);
@@ -46,7 +48,7 @@ describe('ingredientsSlice reducer', () => {
         error: { message: errorMessage }
       };
       const state = ingredientsReducer(initialState, action);
-      
+
       expect(state.loading).toBe(false);
       expect(state.items).toEqual([]);
       expect(state.error).toBe(errorMessage);

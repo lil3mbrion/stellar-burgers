@@ -1,5 +1,5 @@
 declare namespace Cypress {
-    interface Chainable<Subject = any> {
+    interface Chainable {
         addIngredient(ingredientId: string): Chainable<void>;
     }
 }
