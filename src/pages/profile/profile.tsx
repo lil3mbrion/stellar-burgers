@@ -9,7 +9,6 @@ import {
   checkUserAuth
 } from '../../services/slices/authSlice';
 import { AppDispatch } from '../../services/store';
-import { getCookie } from '../../utils/cookie';
 
 export const Profile: FC = () => {
   const user = useSelector(selectUser);
@@ -56,9 +55,17 @@ export const Profile: FC = () => {
       ).unwrap();
 
       setFormValue((prev) => ({ ...prev, password: '' }));
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Ошибка обновления профиля:', error);
-      setLocalError(error.message || 'Ошибка обновления профиля');
+
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'string'
+            ? error
+            : 'Ошибка обновления профиля';
+
+      setLocalError(errorMessage);
     }
   };
 
