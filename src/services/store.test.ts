@@ -120,46 +120,13 @@ describe('Redux Store Configuration', () => {
     expect(typeof feed.isLoading).toBe('boolean');
     expect(feed.error).toBeNull();
   });
-
-  it('should match the expected state shape with TypeScript inference', () => {
-    const state = store.getState();
-
-    expect(state).toMatchObject({
-      ingredients: expect.objectContaining({
-        items: expect.any(Array),
-        loading: expect.any(Boolean),
-        error: null
-      }),
-      burgerConstructor: expect.objectContaining({
-        bun: null,
-        ingredients: expect.any(Array)
-      }),
-      order: expect.objectContaining({
-        orders: expect.any(Array),
-        currentOrder: null,
-        isLoading: expect.any(Boolean),
-        error: null
-      }),
-      auth: expect.objectContaining({
-        user: null,
-        isAuthChecked: expect.any(Boolean),
-        isLoading: expect.any(Boolean),
-        error: null
-      }),
-      feed: expect.objectContaining({
-        data: null,
-        isLoading: expect.any(Boolean),
-        error: null
-      })
-    });
-  });
 });
 
 describe('Redux rootReducer', () => {
   describe('initialization', () => {
     it('should return initial state when called with undefined state', () => {
       const result = rootReducer(undefined, { type: '@@INIT' });
-      
+
       expect(result).toEqual({
         ingredients: {
           items: [],
@@ -193,8 +160,8 @@ describe('Redux rootReducer', () => {
     it('should return current state for unknown action type', () => {
       const currentState = rootReducer(undefined, { type: '@@INIT' });
       const result = rootReducer(currentState, { type: 'UNKNOWN_ACTION' });
-      
-      expect(result).toBe(currentState); 
+
+      expect(result).toBe(currentState);
     });
   });
 });

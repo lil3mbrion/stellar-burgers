@@ -22,6 +22,7 @@ export const ProtectedRoute = ({
 
   useEffect(() => {
     if (hasAccessToken && !user) {
+      console.log('ProtectedRoute: Checking user auth...');
       dispatch(checkUserAuth());
     }
   }, [dispatch, hasAccessToken, user]);

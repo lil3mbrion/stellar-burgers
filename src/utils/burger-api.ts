@@ -72,14 +72,25 @@ export const fetchWithRefresh = async <T>(
     const data = await checkResponse<T>(res);
     console.log('fetchWithRefresh success for:', url);
     return data;
-  } catch (err: any) {
-    console.error('fetchWithRefresh error for', url, ':', err.message, err);
+  } catch (err) {
+    console.error('fetchWithRefresh error for', url, ':', err);
+
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : typeof err === 'string'
+          ? err
+          : err && typeof err === 'object' && 'message' in err
+            ? String((err as { message: unknown }).message)
+            : '';
+
+    const lowerErrorMessage = errorMessage.toLowerCase();
 
     if (
-      err.message === 'jwt expired' ||
-      err.message === 'You should be authorised' ||
-      err.message?.includes('authorised') ||
-      err.message?.includes('auth')
+      lowerErrorMessage === 'jwt expired' ||
+      lowerErrorMessage === 'you should be authorised' ||
+      lowerErrorMessage.includes('authorised') ||
+      lowerErrorMessage.includes('auth')
     ) {
       console.log('Token error detected, refreshing...');
 
