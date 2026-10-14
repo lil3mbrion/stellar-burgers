@@ -10,6 +10,7 @@ import { fetchFeeds } from '../../services/slices/feedSlice';
 import { fetchUserOrders } from '../../services/slices/orderSlice';
 import { AppDispatch } from '../../services/store';
 import { getCookie } from '../../utils/cookie';
+import { TOrder, TIngredient } from '@utils-types';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
@@ -54,9 +55,8 @@ export const OrderInfo: FC = () => {
 
     const date = new Date(orderData.createdAt);
 
-    type TIngredientsWithCount = {
-      [key: string]: any & { count: number };
-    };
+    type TIngredientWithCount = TIngredient & { count: number };
+    type TIngredientsWithCount = Record<string, TIngredientWithCount>;
 
     const ingredientsInfo = orderData.ingredients.reduce(
       (acc: TIngredientsWithCount, item: string) => {
@@ -74,11 +74,12 @@ export const OrderInfo: FC = () => {
 
         return acc;
       },
-      {}
+      {} as TIngredientsWithCount
     );
 
     const total = Object.values(ingredientsInfo).reduce(
-      (acc: number, item: any) => acc + item.price * item.count,
+      (acc: number, item: TIngredientWithCount) =>
+        acc + item.price * item.count,
       0
     );
 
